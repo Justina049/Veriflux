@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "veriflux_chain_backend": {
+      "main": "src/veriflux_chain_backend/main.mo",
+      "type": "motoko"
+    },
+    "veriflux_chain_frontend": {
+      "dependencies": [
+        "veriflux_chain_backend"
+      ],
+      "source": [
+        "src/veriflux_chain_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "veriflux_chain_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}

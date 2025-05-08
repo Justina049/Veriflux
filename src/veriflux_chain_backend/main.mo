@@ -18,9 +18,9 @@ import CertTree "mo:ic-certification/CertTree";
 // Define the actor
 actor CertificateManager {
     private stable var authorizedIssuers: [Principal] = [
-        Principal.fromText("")
+        Principal.fromText("4sxcy-uffsq-raca2-u5fdh-6u5tg-yz6bl-jgtns-eoctr-u6wen-svor7-xae")
     ];
-    private stable var adminPrincipal: Principal = Principal.fromText("");
+    private stable var adminPrincipal: Principal = Principal.fromText("4sxcy-uffsq-raca2-u5fdh-6u5tg-yz6bl-jgtns-eoctr-u6wen-svor7-xae");
     
     private var certificatesEntries: [(Text, CertificateOld)] = [];
     private var certificates = HashMap.HashMap<Text, Certificate>(10, Text.equal, Text.hash);

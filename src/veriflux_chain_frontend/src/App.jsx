@@ -1,31 +1,58 @@
 import { useState } from 'react';
 import { veriflux_chain_backend } from 'declarations/veriflux_chain_backend';
 
-function App() {
-  const [greeting, setGreeting] = useState('');
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    veriflux_chain_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Navbar from "./Components/Navbar/Navbar";
+import HeroSection from "./Components/HeroSection/HeroSection";
+import IssueCertificate from "./Components/IssueCertificate/IssueCertificate";
+import Login from "./Pages/Login/Login";
+import Home from "./Pages/Home/Home";
+import VerifyCertificate from "./Components/VerifyCertificate/VerifyCertificate";
+import CertificateList from "./Components/CertificateList/CertificateList"
+import "./styles/global.scss";
+import ContactUs from './Components/ContactUs/ContactUs';
+
+
+function App() {
+
+const LandingPage = () => {
+  const navigate = useNavigate();
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <div className="landing-page">
+      <Navbar />
+      <HeroSection />
+    </div>
+  );
+};
+
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/issue" element={<IssueCertificate />} />
+        <Route path="/verify" element={<VerifyCertificate />} />
+        <Route path="/list-certificate" element={<CertificateList />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+
+      </Routes>
+    </Router>
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+

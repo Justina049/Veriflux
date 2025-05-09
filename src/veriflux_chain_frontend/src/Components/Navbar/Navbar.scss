@@ -1,0 +1,68 @@
+@use "../../styles/variables" as *;
+
+.navbar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: $deep-blue;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+
+  .logo {
+    color: $gold;
+    font-size: 1.5rem;
+    font-weight: bold;
+    flex-shrink: 0; 
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    flex-grow: 1; 
+    justify-content: center;
+    
+    li {
+      margin: 0 15px;
+
+      a {
+        color: $silver-gray;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: 0.3s;
+
+        &:hover {
+          color: $gold;
+        }
+
+        &.active {
+          color: $gold;
+          font-weight: bold;
+          border-bottom: 2px solid $gold;
+        }
+      }
+    }
+  }
+
+  .go-to-app {
+    background: linear-gradient(45deg, $royal-blue, $teal);
+    color: $white;
+    padding: 0.7rem 1.5rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+    flex-shrink: 0;
+    margin-right: 80px;
+
+    &:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, $teal, $royal-blue);
+    }
+  }
+}

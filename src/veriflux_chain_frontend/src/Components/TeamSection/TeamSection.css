@@ -1,0 +1,80 @@
+/* General Section Styling */
+.team-section {
+    background-color: #cafcd2;
+    padding: 50px 20px;
+    text-align: center;
+  }
+  
+  .team-title {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 40px;
+    font-weight: bold;
+  }
+  
+  /* Grid Layout for Team Cards */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Individual Team Card Styling */
+  .team-card {
+    background: #dcdfdc;
+    padding: 20px;
+    padding-bottom: 30px; /* Add extra padding to the bottom */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Team Image */
+  .team-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    object-fit: cover;
+    border: 3px solid #329c32;
+  }
+  
+  /* Team Name and Role */
+  .team-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3a513d;
+    margin: 10px 0;
+  }
+  
+  .team-role {
+    font-size: 1rem;
+    color: #100e0e;
+    margin-bottom: 45px;
+  }
+  
+  /* Social Icons */
+  .team-social {
+    margin-bottom: 45px; /* Add spacing above the icons */
+  }
+  
+  .team-social a {
+    color: #256b2f;
+    /* color: #00b300; */
+    font-size: 1.2rem;
+    margin: 0 10px;
+    transition: color 0.3s;
+  }
+  
+  .team-social a:hover {
+    color: #006600;
+  }
+  

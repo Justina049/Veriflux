@@ -1,0 +1,77 @@
+// @import "../../styles/variables"; // Adjust the path based on your folder structure
+@use "../../styles/variables" as *;
+
+.verify-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background: $light-gray;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: Arial, sans-serif;
+  color: $deep-blue;
+
+  h2 {
+    color: $royal-blue;
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid $teal;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    background: $white;
+    color: $deep-blue;
+
+    &:focus {
+      border-color: $royal-blue;
+    }
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background: $teal;
+    color: $white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+
+    &:hover {
+      background: $royal-blue;
+    }
+  }
+
+  .verify-error {
+    color: $soft-red;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .verify-certificate {
+    margin-top: 20px;
+    padding: 15px;
+    background: $white;
+    border-radius: 6px;
+    border: 2px solid $emerald-green;
+    text-align: left;
+
+    h3 {
+      color: $emerald-green;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      margin: 5px 0;
+      color: $deep-blue;
+    }
+  }
+}

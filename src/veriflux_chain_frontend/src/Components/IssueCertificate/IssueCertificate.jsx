@@ -33,7 +33,11 @@ function IssueCertificate({ onCertificateIssued }) {
         program
       );
       setResult(certificate);
-      onCertificateIssued();
+
+      if (typeof onCertificateIssued === 'function') {
+        onCertificateIssued();
+      }
+      // onCertificateIssued();
       
       // Reset form
       setFormData({

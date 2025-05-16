@@ -1,87 +1,125 @@
-@use "../../styles/variables" as *;
+@use "../../styles/variable" as *;
 
 .hero-section {
-  // position: relative;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: $white;
-  overflow: hidden;
-  background-image: url('../../Images/pexels-rostislav-5011647.jpg');
-  background-size: cover;      
-  background-repeat: no-repeat; 
-  background-position: center;  
-  // background-color: $deep-blue;
+  padding: 4rem 0;
+  background: $light-gray;
 
-  // Background Particles
-  // .particles-bg {
-  //   position: absolute;
-  //   top: 0;
-  //   left: 0;
-  //   width: 100%;
-  //   height: 100%;
-  //   z-index: 1;
-  // }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
 
-  // Hero Content
-  .hero-content {
-    position: relative;
-    z-index: 2;
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    align-items: center;
+  }
 
-    h1 {
-      font-size: 2.5rem;
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .badge-icon {
+        color: $emerald-green;
+        font-size: 1.2rem;
+      }
+
+      .badge-text {
+        font-weight: 600;
+        color: $deep-blue;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    .hero-title {
+      font-size: 2.8rem;
       font-weight: bold;
-      margin-bottom: 1rem;
-      color: $white;
+      color: $deep-blue;
+
+      span {
+        color: $teal;
+      }
     }
 
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      color: $white;
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.6;
+      max-width: 600px;
     }
 
-    .cta-buttons {
+    .hero-actions {
       display: flex;
       gap: 1rem;
-      justify-content: center;
 
-      .get-started {
-        background: $gold;
-        color: $deep-blue;
-        padding: 0.8rem 1.8rem;
-        font-size: 1.1rem;
-        font-weight: bold;
+      .hero-button {
+        padding: 0.8rem 1.5rem;
         border: none;
-        border-radius: 25px;
         cursor: pointer;
-        transition: 0.3s;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.3s ease, color 0.3s ease;
 
-        &:hover {
-          transform: scale(1.05);
-          // background: lighten($gold, 15%);
+        &.primary {
+          background-color: $teal;
+          color: $white;
+
+          &:hover {
+            background-color: darken($teal, 10%);
+          }
+        }
+
+        &.secondary {
+          background-color: lighten($teal, 45%);
+          color: $teal;
+
+          &:hover {
+            background-color: lighten($teal, 30%);
+            color: darken($teal, 10%);
+          }
         }
       }
+    }
 
-      .go-to-app {
-        background: $royal-blue;
-        color: $white;
-        padding: 0.8rem 1.8rem;
-        font-size: 1.1rem;
-        font-weight: bold;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: 0.3s;
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
 
-        &:hover {
-          transform: scale(1.05);
-          // background: lighten($royal-blue, 10%);
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .feature-icon {
+          color: $emerald-green;
+        }
+
+        .feature-label {
+          font-size: 0.95rem;
+          color: #333;
         }
       }
+    }
+  }
+
+  .hero-right {
+    .hero-image {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     }
   }
 }

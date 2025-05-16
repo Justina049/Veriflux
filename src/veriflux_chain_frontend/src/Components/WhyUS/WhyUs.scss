@@ -1,0 +1,69 @@
+// @use '../../variable' as *;
+@use "../../styles/variable" as *;
+
+.why-veriflux-section {
+  padding: 4rem 2rem;
+  background-color: $light-gray;
+  text-align: center;
+
+  .why-veriflux-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: $deep-blue;
+    margin-bottom: 1rem;
+  }
+
+  .why-veriflux-description {
+    font-size: 1.1rem;
+    color: $dark-gray;
+    max-width: 700px;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  .why-veriflux-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .why-veriflux-card {
+    background: $white;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: $royal-blue;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      color: $deep-blue;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: $medium-gray;
+      line-height: 1.5;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .why-veriflux-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}

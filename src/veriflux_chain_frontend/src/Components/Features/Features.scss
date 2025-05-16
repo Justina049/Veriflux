@@ -1,0 +1,71 @@
+@use "../../styles/variables" as *;
+
+.key-features-section {
+  padding: 4rem 2rem;
+  background: $white;
+  text-align: center;
+
+  .key-features-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: $deep-blue;
+    margin-bottom: 1rem;
+  }
+
+  .key-features-description {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); // 2 columns for 4 items
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .feature-item {
+    background: $light-gray;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      color: $deep-blue;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 1.3rem;
+      color: #333;
+    }
+
+    // Icon color overrides for clarity
+    &:nth-child(1) .feature-icon { color: $royal-blue; }
+    &:nth-child(2) .feature-icon { color: $emerald-green; }
+    &:nth-child(3) .feature-icon { color: $soft-red; }
+    &:nth-child(4) .feature-icon { color: $gold; }
+  }
+
+  // Responsive tweak for small screens
+  @media (max-width: 768px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

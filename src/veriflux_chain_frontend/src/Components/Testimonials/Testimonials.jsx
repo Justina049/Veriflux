@@ -41,9 +41,9 @@ const testimonials = [
   {
     name: "John Smith",
     profession: "Software Engineer",
-    comment: "A seamless experience from start to finish. Highly recommend!",
+    comment: "A seamless experience from start to finish. Highly recommend! Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit eum atque ad alias hic nemo ratione soluta pariatur. Quos, minima.",
     rating: 5,
-    imgSrc: img,
+    imgSrc: img
   },
   {
     name: "Sarah Lee",

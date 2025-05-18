@@ -303,7 +303,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Hero from "../../Components/HeroSection/HeroSection";
 import Features from "../../Components/Features/Features";
 import WhyUs from "../../Components/WhyUS/WhyUs";
-import Plans from "../../Components/Plans/Plan";
+import Plan from "../../Components/Plans/Plan";
 import Testimonials from "../../Components/Testimonials/Testimonials";
 import CTASection from "../../Components/CTASection/CTASection";
 import Footer from "../../Components/Footer/Footer";
@@ -315,7 +315,7 @@ const HomePage = () => {
       <Hero />
       <Features />
       <WhyUs />
-      <Plans />
+      <Plan />
       <Testimonials />
       <CTASection /> {/* Optional: Remove or comment out if not needed */}
       <Footer />

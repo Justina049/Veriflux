@@ -14,6 +14,7 @@ import CertificateList from "./Components/CertificateList/CertificateList"
 import "./styles/global.scss";
 import ContactUs from './Components/ContactUs/ContactUs';
 import LandingPage from './Pages/LandingPage/LandingPage';
+import AboutUs from './Pages/AboutUs/AboutUs';
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
         <Route path="/verify" element={<VerifyCertificate />} />
         <Route path="/list-certificate" element={<CertificateList />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/about" element={<AboutUs />} />
+
 
       </Routes>
     </Router>

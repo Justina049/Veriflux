@@ -23,7 +23,7 @@ const Footer = () => {
         <div className="footer-section links">
           <h4>Useful Links</h4>
           <ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="/home">Home</a></li>
             <li><a href="/plans">Pricing</a></li>
             <li><a href="/verify">Verify</a></li>
             <li><a href="/about">About Us</a></li>

@@ -1,0 +1,96 @@
+@use '../../styles/variable' as *;
+
+.mission-vision-section {
+  padding: 100px 20px 60px; // Top padding increased to avoid navbar overlap
+  background-color: $black-glass;
+  background-image: url("../assets/veriflux.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: 1;
+  }
+
+  .mission-vision-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 0 15px;
+  }
+
+  .mission-vision-title {
+    font-size: 2.2rem;
+    color: $royal-blue;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .mission-vision-description {
+    font-size: 1.1rem;
+    color: $dark-gray;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .mission-vision-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    .card {
+      position: relative;
+      background-color: rgba(245, 249, 255, 0.9);
+      border-left: 5px solid $royal-blue;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+
+      h3 {
+        font-size: 1.4rem;
+        color: $royal-blue;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 1.05rem;
+        color: $medium-gray;
+        line-height: 1.5;
+      }
+
+      // Stacked effect
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 100%;
+        height: 100%;
+        background: rgba(245, 249, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+        z-index: -1;
+      }
+
+      &::after {
+        top: 16px;
+        left: 16px;
+        z-index: -2;
+      }
+    }
+  }
+}

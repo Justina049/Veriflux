@@ -166,7 +166,8 @@
 //           <p className="about-card-text">
 //             Our mission is to provide a secure and verifiable solution for institutions, 
 //             employers, and individuals to validate credentials with confidence.
-//           </p>
+//           </p>//
+//
 //         </div>
 
 //         {/* Vision Card */}

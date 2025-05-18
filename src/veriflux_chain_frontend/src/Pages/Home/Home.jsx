@@ -305,7 +305,7 @@ import Features from "../../Components/Features/Features";
 import WhyUs from "../../Components/WhyUS/WhyUs";
 import Plan from "../../Components/Plans/Plan";
 import Testimonials from "../../Components/Testimonials/Testimonials";
-import CTASection from "../../Components/CTASection/CTASection";
+import CTA from "../../Components/CTA/CTA";
 import Footer from "../../Components/Footer/Footer";
 
 const HomePage = () => {
@@ -317,7 +317,7 @@ const HomePage = () => {
       <WhyUs />
       <Plan />
       <Testimonials />
-      <CTASection /> {/* Optional: Remove or comment out if not needed */}
+      <CTA /> 
       <Footer />
     </div>
   );

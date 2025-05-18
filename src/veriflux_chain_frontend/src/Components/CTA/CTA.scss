@@ -1,0 +1,59 @@
+@use '../../styles//variable.scss' as *; 
+
+.cta-section {
+  background: $deep-blue;
+  color: $white;
+  padding: 4rem 2rem;
+  text-align: center;
+  border-radius: 1rem;
+  margin: 4rem 2rem;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    color: $silver-gray;
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+
+      &.primary {
+        background: $gold;
+        color: $dark-gray;
+        border: none;
+
+        &:hover {
+          background: darken($gold, 10%)
+        }
+      }
+
+      &.secondary {
+        background: transparent;
+        border: 2px solid $white;
+        color: $white;
+
+        &:hover {
+          background: rgba($white, 0.1);
+        }
+      }
+    }
+  }
+}

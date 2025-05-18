@@ -1,0 +1,121 @@
+@use '../../styles/variable' as *; // Importing variables from variable.scss
+
+.veriflux-footer {
+    background-color: $light-gray;
+    color: $dark-gray;
+    padding: 3rem 2rem;
+    font-size: 1rem;
+  
+    .footer-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 3rem;
+      border-bottom: 1px solid $silver-gray;
+      padding-bottom: 2rem;
+  
+      .footer-section {
+        flex: 1;
+        min-width: 260px;
+  
+        h3 {
+          color: $royal-blue;
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+        }
+  
+        h4 {
+          color: $deep-blue;
+          font-size: 1.2rem;
+          margin-bottom: 1rem;
+        }
+  
+        p {
+          margin: 0.5rem 0;
+          line-height: 1.6;
+        }
+  
+        ul {
+          list-style: none;
+          padding: 0;
+  
+          li {
+            margin-bottom: 0.7rem;
+  
+            a {
+              color: $medium-gray;
+              text-decoration: none;
+              transition: color 0.3s;
+  
+              &:hover {
+                color: $teal;
+              }
+            }
+          }
+        }
+  
+        .social-icons {
+          margin-top: 1rem;
+          display: flex;
+          gap: 1rem;
+  
+          svg {
+            font-size: 2.4rem;
+            color: $royal-blue;
+            background-color: $white;
+            border: 1px solid $silver-gray;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+  
+            &:hover {
+              background-color: $royal-blue;
+              color: $white;
+              border-color: transparent;
+            }
+          }
+        }
+  
+        form {
+          display: flex;
+          align-items: center;
+          margin-top: 0.8rem;
+          max-width: 100%;
+  
+          input {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: 1px solid $silver-gray;
+            border-radius: 2rem 0 0 2rem;
+            outline: none;
+            font-size: 1rem;
+          }
+  
+          button {
+            padding: 0.6rem 1.2rem;
+            background-color: $emerald-green;
+            color: $white;
+            border: none;
+            border-radius: 0 2rem 2rem 0;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+  
+            &:hover {
+              background-color: darken($emerald-green, 10%);
+            }
+          }
+        }
+      }
+    }
+  
+    .footer-bottom {
+      text-align: center;
+      padding-top: 1.5rem;
+      font-size: 0.9rem;
+      color: $medium-gray;
+    }
+  }
+  

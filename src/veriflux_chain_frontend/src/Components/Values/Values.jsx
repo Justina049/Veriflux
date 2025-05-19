@@ -1,51 +1,36 @@
 import React from 'react';
-import { FaLock, FaUserCheck, FaLayerGroup, FaRocket } from 'react-icons/fa';
-import './Values.scss'
-
-const values = [
-  {
-    icon: <FaLock />,
-    title: 'Security',
-    description: 'We prioritize data integrity, ensuring credentials are tamper-proof and verifiable on the blockchain.',
-  },
-  {
-    icon: <FaUserCheck />,
-    title: 'Trust & Transparency',
-    description: 'Every credential issued can be independently verified to establish trust between all parties.',
-  },
-  {
-    icon: <FaLayerGroup />,
-    title: 'Interoperability',
-    description: 'Our solution integrates seamlessly with existing systems and supports multiple institutions.',
-  },
-  {
-    icon: <FaRocket />,
-    title: 'Innovation',
-    description: 'We leverage modern blockchain technology to bring scalable and forward-thinking solutions.',
-  },
-];
+import { FaLightbulb, FaHandshake, FaLock, FaGlobe } from 'react-icons/fa';
+import './Values.scss';
 
 const Values = () => {
   return (
     <section className="values-section">
-  <div className="values-container">
-    <h2 className="values-title">Our Core Values</h2>
-    <div className="values-grid">
-      <div className="value-item">
-        <div className="icon">💡</div>
-        <h4>Innovation</h4>
-        <p>We constantly seek creative solutions to drive progress.</p>
+      <div className="values-container">
+        <h2 className="values-title">Our Core Values</h2>
+        <div className="values-grid">
+          <div className="value-item">
+            <div className="icon"><FaLightbulb /></div>
+            <h4>Innovation</h4>
+            <p>We constantly seek creative solutions to drive progress.</p>
+          </div>
+          <div className="value-item">
+            <div className="icon"><FaHandshake /></div>
+            <h4>Integrity</h4>
+            <p>Honesty and transparency guide all our actions.</p>
+          </div>
+          <div className="value-item">
+            <div className="icon"><FaLock /></div>
+            <h4>Security</h4>
+            <p>Your data and credentials are protected with industry-leading blockchain technology.</p>
+          </div>
+          <div className="value-item">
+            <div className="icon"><FaGlobe /></div>
+            <h4>Transparency</h4>
+            <p>Our processes are open and verifiable to build trust across all users and institutions.</p>
+          </div>
+        </div>
       </div>
-      <div className="value-item">
-        <div className="icon">🤝</div>
-        <h4>Integrity</h4>
-        <p>Honesty and transparency guide all our actions.</p>
-      </div>
-   
-    </div>
-  </div>
-</section>
-
+    </section>
   );
 };
 

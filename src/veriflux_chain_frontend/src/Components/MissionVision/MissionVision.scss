@@ -1,9 +1,8 @@
 @use '../../styles/variable' as *;
 
 .mission-vision-section {
-  padding: 100px 20px 60px; // Top padding increased to avoid navbar overlap
+  padding: 100px 20px 60px; 
   background-color: $black-glass;
-  background-image: url("../assets/veriflux.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

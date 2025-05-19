@@ -1,0 +1,69 @@
+@use "../../styles/variable" as *; 
+
+.team-section {
+  padding: 4rem 2rem;
+  background: rgba(240, 237, 237, 0.85);
+  text-align: center;
+
+  .team-title {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: $deep-blue;
+    font-weight: bold;
+  }
+
+  .team-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .team-card {
+    background: $white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .team-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .team-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: $navy-overlay;
+    }
+
+    .team-role {
+      font-size: 1rem;
+      color: $medium-gray;
+      margin-bottom: 1rem;
+    }
+
+    .team-social {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+
+      a {
+        color: $royal-blue;
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $teal;
+        }
+      }
+    }
+  }
+}

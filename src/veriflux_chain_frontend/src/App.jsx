@@ -17,6 +17,7 @@ import LandingPage from './Pages/LandingPage/LandingPage';
 import AboutUs from './Pages/AboutUs/AboutUs';
 import Blog from './Components/Blog/Blog';
 import Payment from './Pages/Payment/Payment';
+import Dashboard from './Components/Dashboard/Dashboard';
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/payment" element={<Payment />} />
 
 

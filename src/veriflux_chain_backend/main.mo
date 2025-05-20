@@ -239,63 +239,66 @@ actor CertificateManager {
 
    
     // Verify a certificate by hash
-    public query func verifyCertificate(hash: Text): async {
-        certificate: ?Certificate;
-        certified: Bool;
-        certificate_blob: Blob;
-        witness : Blob;
-        valid: Bool;
-        status: Text;
-        
-    } {
-        if (Text.size(hash) == 0) {
-            throw Error.reject("Error: Hash cannot be empty");
+public query func verifyCertificate(hash: Text) : async {
+    certificate: ?Certificate;
+    certified: Bool;
+    certificate_blob: Blob;
+    witness: Blob;
+    valid: Bool;
+    status: Text;
+} {
+    if (Text.size(hash) == 0) {
+        throw Error.reject("Error: Hash cannot be empty");
+    };
+
+    let certificate = certificates.get(hash);
+    let path: [Blob] = [Text.encodeUtf8("certificates"), Text.encodeUtf8(hash)];
+
+    let certificate_blob = switch (ct.lookup(path)) {
+        case (null) {
+            switch (certificate) {
+                case (null) { Blob.fromArray([]) };
+                case (?cert) { to_candid(cert) };
+            }
         };
+        case (?blob) { blob };
+    };
 
-        let certificate = certificates.get(hash);
-        let path : [Blob] = [Text.encodeUtf8("certificates"), Text.encodeUtf8(hash)];
-        
+    let witness = ct.encodeWitness(ct.reveal(path));
+    let certified = CertifiedData.getCertificate() != null;
 
-        let certificate_blob = switch (ct.lookup(path)) {
-            case (null) { 
-                // If not in tree, try to serialize from HashMap
-                switch (certificate) {
-                    case (null) { Blob.fromArray([]) };
-                    case (?cert) { to_candid(cert) };
-                }
-            };
-            case (?blob) { blob };
+    let valid = switch (certificate) {
+        case (null) { false };
+        case (?cert) {
+            certified and cert.status == "Valid"
         };
+    };
 
-        let witness = ct.encodeWitness(ct.reveal(path));
-
-        let certified = CertifiedData.getCertificate() != null;
-
-        let valid = switch (certificate) {
-            case (null) { false };
-            case (?cert) { 
-                certified and cert.status == "Valid" 
-            };
-        };
+    let status = switch (certificate) {
+        case (null) { "Invalid" };
+        case (?cert) { cert.status };
+    };
 
     return {
-        certificate = certificate; // now of type ?Certificate as expected
+        certificate = certificate;
         certified = certified;
         certificate_blob = certificate_blob;
         witness = witness;
         valid = valid;
-        status = switch (certificate) {
-            case (null) { "Invalid" };
-            case (?cert) { cert.status };
-        };
+        status = status;
     };
- 
-    };
+};
+
 
     // List all certificates
     public query func listCertificates(): async [Certificate] {
         return Iter.toArray(certificates.vals());
     };
+
+
+
+
+
 };
 
 

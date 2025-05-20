@@ -31,6 +31,16 @@ const Footer = () => {
           </ul>
         </div>
 
+        <div className="footer-section others">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/contact">Contact us</a></li>
+            <li><a href="dashboard">Dashboard</a></li>
+            <li><a href="payment">Payment</a></li>
+          </ul>
+        </div>
+
         <div className="footer-section newsletter">
           <h4>Stay Updated</h4>
           <p>Subscribe to get updates about new features & plans.</p>

@@ -16,12 +16,12 @@
   
   /* Navbar Styles */
   .navbar {
-    position: fixed; /* Keeps navbar at the top while scrolling */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #fff; /* Adjust color as needed */
-    z-index: 10; /* Ensures the navbar is above other elements */
+    background-color: #fff; 
+    z-index: 10; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px 20px;
     display: flex;

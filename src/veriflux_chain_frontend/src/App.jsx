@@ -12,10 +12,10 @@ import Home from "./Pages/Home/Home";
 import VerifyCertificate from "./Components/VerifyCertificate/VerifyCertificate";
 import CertificateList from "./Components/CertificateList/CertificateList"
 import "./styles/global.scss";
-import ContactUs from './Components/ContactUs/ContactUs';
+import ContactUs from './Pages/ContactUs/ContactUs';
 import LandingPage from './Pages/LandingPage/LandingPage';
 import AboutUs from './Pages/AboutUs/AboutUs';
-
+import Blog from './Components/Blog/Blog';
 
 function App() {
 
@@ -40,9 +40,9 @@ function App() {
         <Route path="/issue" element={<IssueCertificate />} />
         <Route path="/verify" element={<VerifyCertificate />} />
         <Route path="/list-certificate" element={<CertificateList />} />
-        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/contact" element={<ContactUs />} />
         <Route path="/about" element={<AboutUs />} />
-
+        <Route path="/blog" element={<Blog />} />
 
       </Routes>
     </Router>

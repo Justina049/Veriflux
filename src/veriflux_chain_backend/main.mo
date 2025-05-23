@@ -17,18 +17,9 @@ import CertTree "mo:ic-certification/CertTree";
 
 // Define the actor
 actor CertificateManager {
-    private stable var authorizedIssuers: [Principal] = [
-        Principal.fromText("4sxcy-uffsq-raca2-u5fdh-6u5tg-yz6bl-jgtns-eoctr-u6wen-svor7-xae")
-    ];
-    private stable var adminPrincipal: Principal = Principal.fromText("4sxcy-uffsq-raca2-u5fdh-6u5tg-yz6bl-jgtns-eoctr-u6wen-svor7-xae");
-    
-    private var certificatesEntries: [(Text, CertificateOld)] = [];
-    private var certificates = HashMap.HashMap<Text, Certificate>(10, Text.equal, Text.hash);
-    
-    // Add certified data store
-    stable let cert_store : CertTree.Store = CertTree.newStore();
-    let ct = CertTree.Ops(cert_store);
-    
+
+    // ======== Certificate Types ========
+
     // Old Certificate Type (used before upgrade)
     type CertificateOld = {
         issuer: Text;
@@ -47,15 +38,91 @@ actor CertificateManager {
         hash: Text;
         status: Text;
     };
+
+
+    // ======== Role-Based Access Control ========
+
+    // Role enum
+    public type Role = {
+        #Admin;
+        #Issuer;
+        #Viewer;
+        #Verifier;
+    };
+
+    // Role map (MUST be initialized before assigning any roles)
+    private var roleMap = HashMap.HashMap<Principal, Role>(10, Principal.equal, Principal.hash);
+    // private var roleMap = HashMap.HashMap<Principal, [Role]>(10, Principal.equal, Principal.hash);
+    // Default admin principal
+    private stable let defaultAdmin: Principal = Principal.fromText("yipb2-x4tqh-gorql-bfmzd-ci5ky-koed3-qodsq-y46q5-yq5mv-jtedc-nae");
+
+    // Assign admin role on canister creation
+    ignore roleMap.put(defaultAdmin, #Admin);
+
+    // Store user roles for upgrades
+    private stable var userRoles : [(Principal, Role)] = [];
+
+
+    // ======== Certificate Storage ========
+
+    // Old certificate entries list (if needed)
+    private var certificatesEntries: [(Text, CertificateOld)] = [];
+
+    // New certificate map
+    private var certificates = HashMap.HashMap<Text, Certificate>(10, Text.equal, Text.hash);
+
+
+    // ======== Certified Data ========
+
+    stable let cert_store : CertTree.Store = CertTree.newStore();
+    let ct = CertTree.Ops(cert_store);
+
+    var lastCaller : ?Principal = null;
+    
+
+    // Assign a role to a user (only callable internally or add admin check if needed)
+    private func assignRole(user: Principal, role: Role) {
+        roleMap.put(user, role);
+    };
+
+    public shared(msg) func assignRoleToUser(user: Principal, role: Role): async () {
+        let caller = msg.caller;
+        if (not (await hasRole(caller, #Admin))) {
+            throw Error.reject("Unauthorized: Only Admin can assign roles");
+        };
+            assignRole(user, role);
+    };
+
+
+    // Get role of a principal
+    public query func getRole(p: Principal) : async ?Role {
+        roleMap.get(p)
+    };
+
+    // Check if caller has a specific role
+    public query func hasRole(p: Principal, role: Role) : async Bool {
+        switch (roleMap.get(p)) {
+            case (?r) { r == role };
+            case null { false };
+        }
+    };
+
     
 
     // Preserve old certificates before upgrade
     system func preupgrade() {
+        userRoles := Iter.toArray(roleMap.entries());
         certificatesEntries := Iter.toArray(certificates.entries());
     };
 
     // Migrate old certificates to the new format after upgrade
     system func postupgrade() {
+        // Restore User roles
+        for ((p, r) in userRoles.vals()) {
+            roleMap.put(p, r);
+        };
+
+        // Migrate old certificates to new format
         let migratedCerts = HashMap.HashMap<Text, Certificate>(10, Text.equal, Text.hash);
     
         for ((key, oldCert) in certificatesEntries.vals()) {
@@ -90,7 +157,12 @@ actor CertificateManager {
         certificatesByStatus: [(Text, Nat)];
     } {
         let totalCertificates = certificates.size();
-        let totalIssuers = Array.size(authorizedIssuers);
+
+        let issuerIter : Iter.Iter<(Principal, Role)> = 
+            Iter.filter<(Principal, Role)>(roleMap.entries(), func ((p, r)) { r == #Issuer });
+
+        let totalIssuers = Iter.size(issuerIter);
+        
         
         let statusCount = HashMap.HashMap<Text, Nat>(3, Text.equal, Text.hash);
         
@@ -111,43 +183,35 @@ actor CertificateManager {
         };
     };
     
-    // Add an authorized issuer (Admin Only)
-    public shared (msg) func addAuthorizedIssuer(issuer: Principal): async Text {
-        // Input Validation
-        if (Principal.isAnonymous(issuer)) {
-            throw Error.reject("Error: Invalid issuer principal");
-        };
 
-        // check if the caller is the admin
-        if (msg.caller != adminPrincipal) {
-            return "Error: Only admin can add authorized issuers";
-        };
 
-        // check if the issuer already exist
-        if (Array.find(authorizedIssuers, func(p: Principal): Bool { p == issuer }) != null) {
-            return "Error: Issuer already exists";
-        };
 
-        // Add the new issuer
-        authorizedIssuers := Array.append(authorizedIssuers, [issuer]);
 
-        //  Log the action
-        Debug.print("New authorized issuer added: " # Principal.toText(issuer));
-        return "New authorized issuer added successfully";
-    };
 
-    // Add a new admin (Admin Only)
-    public shared (msg) func addAdmin(newAdmin: Principal): async Text {
-        if (msg.caller != adminPrincipal and Array.find(authorizedIssuers, func(p: Principal): Bool { p == msg.caller }) == null) {
-            return "Error: Only admin or authorized issuers can add new admins";
-        };
-        authorizedIssuers := Array.append(authorizedIssuers, [newAdmin]);
-        Debug.print("New admin added: " # Principal.toText(newAdmin));
-        return "New admin added successfully";
-    };
+
 
     // Old Function (kept for backward compatibility)
-    public func createCertificate(issuer: Text, recipient: Text, course: Text): async CertificateOld {
+    public shared(msg)func createCertificate(issuer: Text, recipient: Text, course: Text): async CertificateOld {
+        // let caller = Principal.fromActor(this); // default to canister unless you override (e.g., for testing)
+        let caller = msg.caller;
+        let roleOpt = roleMap.get(caller);
+
+        switch (roleOpt) {
+            case (?role) {
+                switch (role) {
+                    case (#Issuer) { /* Issuer can create certificates */ };
+                    case (#Admin) { /* Admin can create certificates */ };
+                    case (#Viewer) { throw Error.reject("Access Denied: Viewers cannot create certificates"); };
+                    case (#Verifier) { throw Error.reject("Access Denied: Verifiers cannot create certificates"); };
+                    case (_) {
+                        throw Error.reject("Access Denied: Only Issuers or Admins can create certificates");
+                    };
+                };
+            };
+            case null { 
+                throw Error.reject("Only Issuers or Admins can create certificates"); 
+            };
+        };
     // Input Validation 
     if (Text.size(issuer) == 0 or Text.size(recipient) == 0 or Text.size(course) == 0) {
         throw Error.reject("Error: All fields must be non-empty");
@@ -193,14 +257,26 @@ actor CertificateManager {
 
 
     // New Function (Future usage)
-    public func issueCertificate(issuer: Text, recipient: Text, program: Text, issuedAt: Int): async Certificate {
+    public shared(msg) func issueCertificate(issuer: Text, recipient: Text, program: Text, issuedAt: Int): async Certificate {
+        // Enforce role-based access control
+        let caller = msg.caller;
+
+        lastCaller := ?caller;
+        // Debug.print("caller principal is: " # Principal.toText(caller));
+        let isIssuer = await hasRole(caller, #Issuer);
+        let isAdmin = await hasRole(caller, #Admin);
+        
+        if (not (isIssuer or isAdmin)) {
+        // if (not (await hasRole(caller, #Issuer))) {
+            throw Error.reject("Error: Unauthorized access");
+        };
+    
         // Input Validation
-        if (Text.size(issuer) == 0 or Text.size(recipient) == 0 or Text.size(program) == 0) {
-            throw Error.reject("Error: All text fields must be non-empty");
-        };
-        if (issuedAt <=0) {
-            throw Error.reject("Error: Invalid issueAt timestamp");
-        };
+        // if (Text.size(issuer) == 0 or Text.size(recipient) == 0 or Text.size(program) == 0) {
+        //     throw Error.reject("Error: All text fields must be non-empty");
+        // };
+        
+        let issuedAt = Time.now();
 
         let hashInput = issuer # recipient # program # Int.toText(issuedAt);
         let hashBlob = Text.encodeUtf8(hashInput);
@@ -227,6 +303,10 @@ actor CertificateManager {
         return cert;
     };
 
+    public query func getLastCaller() : async ?Principal {
+      return lastCaller;
+  };
+
     // Helper function to convert Blob to Hex String
     private func blobToHex(blob: Blob): Text {
         let hex = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
@@ -239,55 +319,55 @@ actor CertificateManager {
 
    
     // Verify a certificate by hash
-public query func verifyCertificate(hash: Text) : async {
-    certificate: ?Certificate;
-    certified: Bool;
-    certificate_blob: Blob;
-    witness: Blob;
-    valid: Bool;
-    status: Text;
-} {
-    if (Text.size(hash) == 0) {
-        throw Error.reject("Error: Hash cannot be empty");
-    };
-
-    let certificate = certificates.get(hash);
-    let path: [Blob] = [Text.encodeUtf8("certificates"), Text.encodeUtf8(hash)];
-
-    let certificate_blob = switch (ct.lookup(path)) {
-        case (null) {
-            switch (certificate) {
-                case (null) { Blob.fromArray([]) };
-                case (?cert) { to_candid(cert) };
-            }
+    public query func verifyCertificate(hash: Text) : async {
+        certificate: ?Certificate;
+        certified: Bool;
+        certificate_blob: Blob;
+        witness: Blob;
+        valid: Bool;
+        status: Text;
+    } {
+        if (Text.size(hash) == 0) {
+            throw Error.reject("Error: Hash cannot be empty");
         };
-        case (?blob) { blob };
-    };
 
-    let witness = ct.encodeWitness(ct.reveal(path));
-    let certified = CertifiedData.getCertificate() != null;
+        let certificate = certificates.get(hash);
+        let path: [Blob] = [Text.encodeUtf8("certificates"), Text.encodeUtf8(hash)];
 
-    let valid = switch (certificate) {
-        case (null) { false };
-        case (?cert) {
-            certified and cert.status == "Valid"
+        let certificate_blob = switch (ct.lookup(path)) {
+            case (null) {
+                switch (certificate) {
+                    case (null) { Blob.fromArray([]) };
+                    case (?cert) { to_candid(cert) };
+                }
+            };
+            case (?blob) { blob };
+        };
+
+        let witness = ct.encodeWitness(ct.reveal(path));
+        let certified = CertifiedData.getCertificate() != null;
+
+        let valid = switch (certificate) {
+            case (null) { false };
+            case (?cert) {
+                certified and cert.status == "Valid"
+            };
+        };
+
+        let status = switch (certificate) {
+            case (null) { "Invalid" };
+            case (?cert) { cert.status };
+        };
+
+        return {
+            certificate = certificate;
+            certified = certified;
+            certificate_blob = certificate_blob;
+            witness = witness;
+            valid = valid;
+            status = status;
         };
     };
-
-    let status = switch (certificate) {
-        case (null) { "Invalid" };
-        case (?cert) { cert.status };
-    };
-
-    return {
-        certificate = certificate;
-        certified = certified;
-        certificate_blob = certificate_blob;
-        witness = witness;
-        valid = valid;
-        status = status;
-    };
-};
 
 
     // List all certificates
@@ -298,6 +378,37 @@ public query func verifyCertificate(hash: Text) : async {
 
 
 
+
+// ***************FOR PAYMENT OF PLAN***********************88***
+//     type Plan = {
+//   #Free;
+//   #Pro;
+//   #Enterprise;
+// };
+
+// public type User = {
+//   username: Text;
+//   email: Text;
+//   plan: Plan;
+// };
+
+// var users: TrieMap<Principal, User> = TrieMap();
+
+// public func upgradeUser(p: Principal, newPlan: Plan) : async () {
+//   switch (users.get(p)) {
+//     case (?user) {
+//       users.put(p, { user with plan = newPlan });
+//     };
+//     case null {};
+//   };
+// };
+
+
+// And in the frontend, use the user plan to restrict or enable features:
+
+// if (user.plan === 'Pro') {
+//   // show Verify Certificate
+// }
 
 };
 

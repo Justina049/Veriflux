@@ -50,17 +50,17 @@ actor CertificateManager {
         #Verifier;
     };
 
-    // Role map (MUST be initialized before assigning any roles)
-    private var roleMap = HashMap.HashMap<Principal, Role>(10, Principal.equal, Principal.hash);
-    // private var roleMap = HashMap.HashMap<Principal, [Role]>(10, Principal.equal, Principal.hash);
-    // Default admin principal
-    private stable let defaultAdmin: Principal = Principal.fromText("yipb2-x4tqh-gorql-bfmzd-ci5ky-koed3-qodsq-y46q5-yq5mv-jtedc-nae");
+    // // Role map (MUST be initialized before assigning any roles)
+    // private var roleMap = HashMap.HashMap<Principal, Role>(10, Principal.equal, Principal.hash);
+    // // private var roleMap = HashMap.HashMap<Principal, [Role]>(10, Principal.equal, Principal.hash);
+    // // Default admin principal
+    // private stable let defaultAdmin: Principal = Principal.fromText("yipb2-x4tqh-gorql-bfmzd-ci5ky-koed3-qodsq-y46q5-yq5mv-jtedc-nae");
 
-    // Assign admin role on canister creation
-    ignore roleMap.put(defaultAdmin, #Admin);
+    // // Assign admin role on canister creation
+    // ignore roleMap.put(defaultAdmin, #Admin);
 
-    // Store user roles for upgrades
-    private stable var userRoles : [(Principal, Role)] = [];
+    // // Store user roles for upgrades
+    // private stable var userRoles : [(Principal, Role)] = [];
 
 
     // ======== Certificate Storage ========
@@ -77,12 +77,74 @@ actor CertificateManager {
     stable let cert_store : CertTree.Store = CertTree.newStore();
     let ct = CertTree.Ops(cert_store);
 
-    var lastCaller : ?Principal = null;
+    // var lastCaller : ?Principal = null;
     
 
-    // Assign a role to a user (only callable internally or add admin check if needed)
+    // // Assign a role to a user (only callable internally or add admin check if needed)
+    // private func assignRole(user: Principal, role: Role) {
+    //     roleMap.put(user, role);
+    // };
+
+    // public shared(msg) func assignRoleToUser(user: Principal, role: Role): async () {
+    //     let caller = msg.caller;
+    //     if (not (await hasRole(caller, #Admin))) {
+    //         throw Error.reject("Unauthorized: Only Admin can assign roles");
+    //     };
+    //         assignRole(user, role);
+    // };
+
+
+    // // Get role of a principal
+    // public query func getRole(p: Principal) : async ?Role {
+    //     roleMap.get(p)
+    // };
+
+    // // Check if caller has a specific role
+    // public query func hasRole(p: Principal, role: Role) : async Bool {
+    //     switch (roleMap.get(p)) {
+    //         case (?r) { r == role };
+    //         case null { false };
+    //     }
+    // };
+
+    private var roleMap = HashMap.HashMap<Principal, Role>(10, Principal.equal, Principal.hash);
+
+    private stable let defaultAdmin: Principal = Principal.fromText("yipb2-x4tqh-gorql-bfmzd-ci5ky-koed3-qodsq-y46q5-yq5mv-jtedc-nae");
+
+    private stable var userRoles : [(Principal, Role)] = [];
+
+    // Call this on canister start to restore roles from stable var to non-stable hashmap
+    private func restoreRoles() : async () {
+        for ((p, r) in userRoles.vals()) {
+            roleMap.put(p, r);
+        };
+        // Ensure defaultAdmin is assigned if no Admin exists
+        let roles : [Role] = Iter.toArray(roleMap.vals());
+        if (Array.find<Role>(roles, func(r : Role) : Bool { r == #Admin }) == null) {
+            roleMap.put(defaultAdmin, #Admin);
+            userRoles := Array.append(userRoles, [(defaultAdmin, #Admin)]);
+        };
+    };
+
+    public shared(msg) func init() : async () {
+        await restoreRoles();
+    };
+
     private func assignRole(user: Principal, role: Role) {
         roleMap.put(user, role);
+        // Update stable roles so they persist
+        var found = false;
+        userRoles := Array.map< (Principal, Role), (Principal, Role) >(userRoles, func(ur) {
+            if (ur.0 == user) {
+                found := true;
+                return (user, role);
+            } else {
+                return ur;
+            }
+        });
+        if (not found) {
+            userRoles := Array.append(userRoles, [(user, role)]);
+        }
     };
 
     public shared(msg) func assignRoleToUser(user: Principal, role: Role): async () {
@@ -90,24 +152,25 @@ actor CertificateManager {
         if (not (await hasRole(caller, #Admin))) {
             throw Error.reject("Unauthorized: Only Admin can assign roles");
         };
-            assignRole(user, role);
+        assignRole(user, role);
     };
 
-
-    // Get role of a principal
-    public query func getRole(p: Principal) : async ?Role {
+    public query func getRole(p: Principal): async ?Role {
         roleMap.get(p)
     };
 
-    // Check if caller has a specific role
-    public query func hasRole(p: Principal, role: Role) : async Bool {
+    public query func hasRole(p: Principal, role: Role): async Bool {
         switch (roleMap.get(p)) {
             case (?r) { r == role };
             case null { false };
         }
     };
 
-    
+
+    public shared(msg) func whoami(): async Principal {
+        return msg.caller;
+    };
+
 
     // Preserve old certificates before upgrade
     system func preupgrade() {
@@ -192,26 +255,36 @@ actor CertificateManager {
 
     // Old Function (kept for backward compatibility)
     public shared(msg)func createCertificate(issuer: Text, recipient: Text, course: Text): async CertificateOld {
-        // let caller = Principal.fromActor(this); // default to canister unless you override (e.g., for testing)
-        let caller = msg.caller;
-        let roleOpt = roleMap.get(caller);
+    //     // let caller = Principal.fromActor(this); // default to canister unless you override (e.g., for testing)
+    //     let caller = msg.caller;
+    //     // let roleOpt = roleMap.get(caller);
+    //     // Check roles asynchronously using hasRole
+    //     let isIssuer = await hasRole(caller, #Issuer);
+    //     let isAdmin = await hasRole(caller, #Admin);
 
-        switch (roleOpt) {
-            case (?role) {
-                switch (role) {
-                    case (#Issuer) { /* Issuer can create certificates */ };
-                    case (#Admin) { /* Admin can create certificates */ };
-                    case (#Viewer) { throw Error.reject("Access Denied: Viewers cannot create certificates"); };
-                    case (#Verifier) { throw Error.reject("Access Denied: Verifiers cannot create certificates"); };
-                    case (_) {
-                        throw Error.reject("Access Denied: Only Issuers or Admins can create certificates");
-                    };
-                };
-            };
-            case null { 
-                throw Error.reject("Only Issuers or Admins can create certificates"); 
-            };
-        };
+    //     if (not (isIssuer or isAdmin)) {
+    //         throw Error.reject("Access Denied: Only Issuers or Admins can create certificates");
+    // };
+
+
+    //     // switch (roleOpt) {
+    //     //     case (?role) {
+    //     //         switch (role) {
+    //     //             case (#Issuer) { /* Issuer can create certificates */ };
+    //     //             case (#Admin) { /* Admin can create certificates */ };
+    //     //             case (#Viewer) { throw Error.reject("Access Denied: Viewers cannot create certificates"); };
+    //     //             case (#Verifier) { throw Error.reject("Access Denied: Verifiers cannot create certificates"); };
+    //     //             case (_) {
+    //     //                 throw Error.reject("Access Denied: Only Issuers or Admins can create certificates");
+    //     //             };
+    //     //         };
+    //     //     };
+    //     //     case null { 
+    //     //         throw Error.reject("Only Issuers or Admins can create certificates"); 
+    //     //     };
+    //     // };
+
+
     // Input Validation 
     if (Text.size(issuer) == 0 or Text.size(recipient) == 0 or Text.size(course) == 0) {
         throw Error.reject("Error: All fields must be non-empty");
@@ -258,23 +331,29 @@ actor CertificateManager {
 
     // New Function (Future usage)
     public shared(msg) func issueCertificate(issuer: Text, recipient: Text, program: Text, issuedAt: Int): async Certificate {
-        // Enforce role-based access control
-        let caller = msg.caller;
+        // // Enforce role-based access control
+        // let caller = msg.caller;
 
-        lastCaller := ?caller;
-        // Debug.print("caller principal is: " # Principal.toText(caller));
-        let isIssuer = await hasRole(caller, #Issuer);
-        let isAdmin = await hasRole(caller, #Admin);
+        // // Role-based access control: Admin is treated as a super-role
+        // // let isAdmin = await hasRole(caller, #Admin);
+        // // let isIssuer = await hasRole(caller, #Issuer);
+
+        // let isIssuer = await hasRole(caller, #Issuer);
+        // let isAdmin = await hasRole(caller, #Admin);
         
-        if (not (isIssuer or isAdmin)) {
-        // if (not (await hasRole(caller, #Issuer))) {
-            throw Error.reject("Error: Unauthorized access");
-        };
+        // Debug.print("Caller: " # Principal.toText(caller));
+        // Debug.print("isAdmin: " # (if (isAdmin) { "true" } else { "false" }));
+        // Debug.print("isIssuer: " # (if (isIssuer) { "true" } else { "false" }));
+
+        // if (not (isIssuer or isAdmin)) {
+        // // if (not (await hasRole(caller, #Issuer))) {
+        //     throw Error.reject("Error: Unauthorized access");
+        // };
     
         // Input Validation
-        // if (Text.size(issuer) == 0 or Text.size(recipient) == 0 or Text.size(program) == 0) {
-        //     throw Error.reject("Error: All text fields must be non-empty");
-        // };
+        if (Text.size(issuer) == 0 or Text.size(recipient) == 0 or Text.size(program) == 0) {
+            throw Error.reject("Error: All text fields must be non-empty");
+        };
         
         let issuedAt = Time.now();
 
@@ -303,9 +382,9 @@ actor CertificateManager {
         return cert;
     };
 
-    public query func getLastCaller() : async ?Principal {
-      return lastCaller;
-  };
+//     public query func getLastCaller() : async ?Principal {
+//       return lastCaller;
+//   };
 
     // Helper function to convert Blob to Hex String
     private func blobToHex(blob: Blob): Text {

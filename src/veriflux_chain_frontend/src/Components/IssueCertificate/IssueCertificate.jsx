@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { veriflux_chain_backend } from '../../../../declarations/veriflux_chain_backend';
+import { withPlanProtection } from '../../utils/withPlanProtection';
 import './IssueCertificate.scss';
 
 function IssueCertificate({ onCertificateIssued }) {

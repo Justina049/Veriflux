@@ -29,9 +29,14 @@ export function getPrincipal() {
   return principal;
 }
 
+export function getIdentity() {
+  return identity;
+}
+
 export async function logout() {
   await authClient.logout();
   identity = null;
   principal = null;
   window.location.reload();
 }
+

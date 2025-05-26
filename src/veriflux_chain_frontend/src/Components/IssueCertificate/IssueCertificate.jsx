@@ -28,7 +28,7 @@ function IssueCertificate({ onCertificateIssued }) {
 
     try {
       const { issuer, recipient, program } = formData;
-      const certificate = await veriflux_chain_backend.createCertificate(
+      const certificate = await veriflux_chain_backend.issueCertificate(
         issuer,
         recipient,
         program

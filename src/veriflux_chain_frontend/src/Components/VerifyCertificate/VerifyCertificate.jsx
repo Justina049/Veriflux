@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './VerifyCertificate.scss';
 import { veriflux_chain_backend } from '../../../../declarations/veriflux_chain_backend';
 
+
 function VerifyCertificate() {
   const [hash, setHash] = useState('');
   const [result, setResult] = useState(null);
@@ -28,6 +29,7 @@ function VerifyCertificate() {
 
   return (
     <div className="verify-certificate">
+      <Navbar/>
       <h2>Verify Certificate</h2>
       <form onSubmit={handleSubmit}>
         <input

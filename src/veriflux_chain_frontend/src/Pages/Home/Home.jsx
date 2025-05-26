@@ -312,7 +312,7 @@ import Footer from "../../Components/Footer/Footer";
 const HomePage = () => {
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <Hero />
       <Features />
       <WhyUs />

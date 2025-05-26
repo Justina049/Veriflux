@@ -26,7 +26,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div classname="contactSection">  
+    <div className="contactSection">  
         <Navbar />
         <div className="contact-wrapper">
         <div className="contact-intro">
@@ -103,3 +103,5 @@ const ContactUs = () => {
 };
 
 export default ContactUs;
+
+

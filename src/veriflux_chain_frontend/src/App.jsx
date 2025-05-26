@@ -41,25 +41,25 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
 
-          {/* 🔐 Wrap protected routes */}
+          🔐 Wrap protected routes
           <Route path="/issue" element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <IssueCertificate />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           } />
 
           <Route path="/verify" element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <VerifyCertificate />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           } />
 
           <Route path="/list-certificate" element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <CertificateList />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           } />
-          
+
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/blog" element={<Blog />} />

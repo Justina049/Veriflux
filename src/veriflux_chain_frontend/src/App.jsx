@@ -1,4 +1,4 @@
-import { UserProvider } from './Pages/UserContext';
+// import { UserProvider } from './Pages/UserContext';
 // import { veriflux_chain_backend } from 'declarations/veriflux_chain_backend';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
@@ -34,7 +34,7 @@ function App() {
 
 
   return (
-    <UserProvider>
+    // <UserProvider>
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -69,7 +69,7 @@ function App() {
 
         </Routes>
       </Router>
-    </UserProvider>
+    // </UserProvider>
   );
 }
 

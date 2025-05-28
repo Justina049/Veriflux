@@ -188,29 +188,29 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import bgImage from "../../Images/pexels-rostislav-5011647.jpg";
-import { initAuth, login, getPrincipal } from "../../auth/identity";
+// import { initAuth, login, getPrincipal } from "../../auth/identity";
 import "./LandingPage.scss";
 
 const LandingPage = () => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    initAuth().then(() => {
-      const principal = getPrincipal();
-      if (principal) setUser(principal);
-    });
-  }, []);
+  // useEffect(() => {
+  //   initAuth().then(() => {
+  //     const principal = getPrincipal();
+  //     if (principal) setUser(principal);
+  //   });
+  // }, []);
 
-  const handleLogin = () => {
-    login(() => {
-      const principal = getPrincipal();
-      if (principal) {
-        setUser(principal);
-        navigate("/home");
-      }
-    });
-  };
+  // const handleLogin = () => {
+  //   login(() => {
+  //     const principal = getPrincipal();
+  //     if (principal) {
+  //       setUser(principal);
+  //       navigate("/home");
+  //     }
+  //   });
+  // };
 
   return (
     <div className="landing-page">
@@ -225,7 +225,7 @@ const LandingPage = () => {
 
         <button
           className="cta-nav"
-          onClick={user ? () => navigate("/home") : handleLogin}
+          onClick={ () => navigate("/home")  }
         >
           Go to App
         </button>
@@ -245,8 +245,11 @@ const LandingPage = () => {
           <h1>Secure & Decentralized Certificate Verification</h1>
           <p>VeriFlux ensures authenticity and trust using blockchain technology.</p>
 
-          <button className="get-started" onClick={handleLogin}>
+          {/* <button className="get-started" onClick={handleLogin}>
             {user ? "Go to App" : "Get Started"}
+          </button> */}
+          <button className="get-started" onClick={() => navigate("/home")}>
+            Get Started
           </button>
         </div>
       </div>

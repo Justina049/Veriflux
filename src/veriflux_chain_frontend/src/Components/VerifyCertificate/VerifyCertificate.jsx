@@ -29,7 +29,7 @@ function VerifyCertificate() {
 
   return (
     <div className="verify-certificate">
-      <Navbar/>
+      
       <h2>Verify Certificate</h2>
       <form onSubmit={handleSubmit}>
         <input

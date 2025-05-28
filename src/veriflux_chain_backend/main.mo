@@ -300,7 +300,7 @@ actor CertificateManager {
 
         certificates.put(hashHex, certNew);
 
-        // Add to certified tree for seecure verification
+        // Add to certified tree for secure verification
         let path : [Blob] = [Text.encodeUtf8("certificates"), Text.encodeUtf8(hashHex)];
         let certBlob = to_candid (certNew);
         ct.put(path, certBlob);
@@ -426,6 +426,20 @@ actor CertificateManager {
             status = status;
         };
     };
+
+
+    // NEW: DIP721 types for nft canister interface
+    //thes types mirror the dip721 standards definitions needed for minting 
+
+
+
+
+
+
+
+
+
+
 
     // List all certificates
     public query func listCertificates() : async [Certificate] {

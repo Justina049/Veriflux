@@ -30,6 +30,7 @@ shared({ caller = owner }) actor class CertificateManager() {
         issuer: Text;
         recipient: Text;
         program: Text;
+        email: Text; 
         issuedAt: Int;
         hash: Text;
         status: Text;
@@ -86,6 +87,7 @@ shared({ caller = owner }) actor class CertificateManager() {
                 issuedAt = oldCert.issuedAt;
                 hash = oldCert.hash;
                 status = "Valid";
+                email = "";
             };
             migratedCerts.put(key, newCert);
         };
@@ -262,18 +264,20 @@ shared({ caller = owner }) actor class CertificateManager() {
     };
 
     // New Function (Future usage)
-    public shared(msg) func issueCertificate(issuer: Text, recipient: Text, program: Text): async Certificate {
+    public shared(msg) func issueCertificate(issuer: Text, recipient: Text, email: Text, program: Text): async Certificate {
         // Normalize inputs
         let normIssuer = normalize(issuer);
         let normRecipient = normalize(recipient);
+        let normEmail = normalize(email);
         let normProgram = normalize(program);
 
         // Input Validation
-        if (Text.size(normIssuer) == 0 or Text.size(normRecipient) == 0 or Text.size(normProgram) == 0) {
+        if (Text.size(normIssuer) == 0 or Text.size(normRecipient) == 0 or Text.size(normEmail) == 0 or Text.size(normProgram) == 0) {
             throw Error.reject("Error: All text fields must be non-empty");
         };
 
-        let dedupInput = normIssuer # normRecipient # normProgram;
+        let dedupInput = normIssuer # normRecipient # normEmail # normProgram;
+        
         let hashBlob = Text.encodeUtf8(dedupInput);
         let hash = Sha256.fromBlob(#sha256, hashBlob);
         let hashHex = blobToHex(hash);
@@ -293,6 +297,7 @@ shared({ caller = owner }) actor class CertificateManager() {
         let cert: Certificate = {
             issuer = issuer;   
             recipient = recipient;
+            email = email;
             program = program;
             issuedAt = issuedAt;
             hash = hashHex;

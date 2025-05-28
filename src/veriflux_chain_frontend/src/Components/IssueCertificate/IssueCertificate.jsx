@@ -8,8 +8,10 @@ function IssueCertificate({ onCertificateIssued }) {
   const [formData, setFormData] = useState({
     issuer: '',
     recipient: '',
-    program: ''
+    program: '',
+    email: ''
   });
+
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -28,11 +30,14 @@ function IssueCertificate({ onCertificateIssued }) {
     setResult(null);
 
     try {
-      const { issuer, recipient, program } = formData;
+      const { issuer, recipient, email, program } = formData;
+      
       const certificate = await veriflux_chain_backend.issueCertificate(
         issuer,
         recipient,
+        email,
         program
+
       );
       setResult(certificate);
 
@@ -45,7 +50,9 @@ function IssueCertificate({ onCertificateIssued }) {
       setFormData({
         issuer: '',
         recipient: '',
-        program: ''
+        program: '',
+        email: ''
+       
       });
     } catch (err) {
       setError(err.message || 'An error occurred while issuing the certificate');
@@ -132,6 +139,19 @@ function IssueCertificate({ onCertificateIssued }) {
             onChange={handleChange}
             required
             placeholder="Enter program name"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            placeholder="Enter recipient email"
           />
         </div>
         

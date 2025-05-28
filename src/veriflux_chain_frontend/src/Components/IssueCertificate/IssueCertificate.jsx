@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
+// import { createActor } from '../../utils/agent';
 import { veriflux_chain_backend } from '../../../../declarations/veriflux_chain_backend';
+// import { withPlanProtection } from '../../utils/withPlanProtection';
 import './IssueCertificate.scss';
 
 function IssueCertificate({ onCertificateIssued }) {
   const [formData, setFormData] = useState({
     issuer: '',
     recipient: '',
-    program: ''
+    program: '',
+    email: ''
   });
+
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -26,11 +30,14 @@ function IssueCertificate({ onCertificateIssued }) {
     setResult(null);
 
     try {
-      const { issuer, recipient, program } = formData;
-      const certificate = await veriflux_chain_backend.createCertificate(
+      const { issuer, recipient, email, program } = formData;
+      
+      const certificate = await veriflux_chain_backend.issueCertificate(
         issuer,
         recipient,
+        email,
         program
+
       );
       setResult(certificate);
 
@@ -43,7 +50,9 @@ function IssueCertificate({ onCertificateIssued }) {
       setFormData({
         issuer: '',
         recipient: '',
-        program: ''
+        program: '',
+        email: ''
+       
       });
     } catch (err) {
       setError(err.message || 'An error occurred while issuing the certificate');
@@ -51,6 +60,43 @@ function IssueCertificate({ onCertificateIssued }) {
       setLoading(false);
     }
   };
+
+
+//   try {
+//     const backend = await createActor(); // Create actor here
+
+//     // Normalize fields: trim + lowercase
+//     const normalize = (str) => str.trim().toLowerCase();
+
+//     const issuer = normalize(formData.issuer);
+//     const recipient = normalize(formData.recipient);
+//     const program = normalize(formData.program);
+//     const issuedAt = BigInt(Date.now() * 1_000_000); // nanoseconds
+
+//     const certificate = await veriflux_chain_backend.issueCertificate(
+//       issuer,
+//       recipient,
+//       program,
+//       issuedAt
+//     );
+
+//     setResult(certificate);
+
+//     if (typeof onCertificateIssued === 'function') {
+//       onCertificateIssued();
+//     }
+
+//     setFormData({
+//       issuer: '',
+//       recipient: '',
+//       program: ''
+//     });
+//   } catch (err) {
+//     setError(err.message || 'An error occurred while issuing the certificate');
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
   return (
     <div className="issue-certificate">
@@ -93,6 +139,19 @@ function IssueCertificate({ onCertificateIssued }) {
             onChange={handleChange}
             required
             placeholder="Enter program name"
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            placeholder="Enter recipient email"
           />
         </div>
         

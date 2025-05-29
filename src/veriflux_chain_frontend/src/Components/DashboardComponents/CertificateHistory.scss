@@ -1,0 +1,61 @@
+.certificate-history {
+  padding: 2rem;
+  background: #fff;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.7rem;
+  }
+
+  .history-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1.5rem;
+
+    .history-item {
+      border-left: 4px solid #ccc;
+      padding: 1rem 1.5rem;
+      background: #f9f9f9;
+      border-radius: 5px;
+      position: relative;
+
+      h3 {
+        margin-bottom: 0.5rem;
+        color: #2a4fda;
+      }
+
+      p {
+        margin: 0.3rem 0;
+        font-size: 0.95rem;
+
+        strong {
+          color: #333;
+        }
+      }
+
+      &.completed {
+        border-left-color: green;
+      }
+
+      &.in-progress {
+        border-left-color: orange;
+      }
+
+      .view-pdf {
+        display: inline-block;
+        margin-top: 0.6rem;
+        background: #2a4fda;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.9rem;
+
+        &:hover {
+          background: #1f3dbf;
+        }
+      }
+    }
+  }
+}

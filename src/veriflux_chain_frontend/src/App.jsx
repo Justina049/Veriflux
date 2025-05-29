@@ -15,6 +15,7 @@ import LandingPage from './Pages/LandingPage/LandingPage';
 import AboutUs from './Pages/AboutUs/AboutUs';
 import Blog from './Components/Blog/Blog';
 import Payment from './Pages/Payment/Payment';
+import RecipientDashboard from "./Pages/Dashboard/RecipientDashboard/ReceipientDashboard";
 // import ProtectedRoute from './auth/ProtectedRoute';
 // import Dashboard from './Pages/Dashboard/Dashboard';
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/recipient" element={<RecipientDashboard />} />
 
           🔐 Wrap protected routes
           <Route path="/issue" element={

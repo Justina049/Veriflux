@@ -1,0 +1,63 @@
+// styles/NotificationCenter.scss
+.notification-center {
+    position: relative;
+    display: inline-block;
+  
+    .bell-button {
+      position: relative;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+  
+      .badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+      }
+    }
+  
+    .dropdown {
+      position: absolute;
+      top: 2.2rem;
+      right: 0;
+      background-color: white;
+      width: 250px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      padding: 0.5rem;
+      z-index: 100;
+  
+      .notification-item {
+        padding: 0.5rem;
+        border-bottom: 1px solid #eee;
+  
+        &:last-child {
+          border-bottom: none;
+        }
+  
+        p {
+          margin: 0;
+        }
+  
+        small {
+          display: block;
+          color: #888;
+          font-size: 0.75rem;
+          margin-top: 2px;
+        }
+      }
+  
+      .empty {
+        padding: 1rem;
+        text-align: center;
+        color: #888;
+      }
+    }
+  }
+  

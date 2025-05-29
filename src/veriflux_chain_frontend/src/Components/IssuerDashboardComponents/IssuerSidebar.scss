@@ -1,0 +1,38 @@
+.issuer-sidebar {
+  width: 220px;
+  height: 100vh;
+  background-color: #14213d;
+  color: #fff;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .nav-links {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin: 20px 0;
+
+      a {
+        color: #ffffffd1;
+        text-decoration: none;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          color: #fca311;
+        }
+      }
+    }
+  }
+}

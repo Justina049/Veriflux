@@ -22,6 +22,9 @@ const Navbar = () => {
           <NavLink to="/list-certificate" className={({ isActive }) => (isActive ? "active" : "")}>
             List Certificates
           </NavLink>
+          <NavLink to="/recipient" className={({ isActive }) => (isActive ? "active" : "")}>
+            Dashboard
+          </NavLink>
         </li>
       </ul>
       <button className="go-to-app">Go to App</button>

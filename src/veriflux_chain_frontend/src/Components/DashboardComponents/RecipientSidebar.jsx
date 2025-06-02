@@ -1,11 +1,11 @@
 import React from 'react';
 import './RecipientSidebar.scss';
 
-function RecipientSidebar({ activeTab, onTabChange }) {
+function RecipientSidebar({ activeTab, setActivePage }) {
   const tabs = [
     { key: 'dashboard', label: 'Dashboard' },
     { key: 'certificates', label: 'My Certificates' },
-    { key: 'notifications', label: 'Notifications' },
+    { key: 'notification', label: 'Notifications' },
     { key: 'help', label: 'Help' },
     { key: 'profile', label: 'Profile' }
   ];
@@ -18,7 +18,7 @@ function RecipientSidebar({ activeTab, onTabChange }) {
           <li
             key={tab.key}
             className={activeTab === tab.key ? 'active' : ''}
-            onClick={() => onTabChange(tab.key)}
+            onClick={() => setActivePage(tab.key)}
           >
             {tab.label}
           </li>

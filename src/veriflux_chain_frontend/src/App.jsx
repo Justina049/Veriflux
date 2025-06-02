@@ -16,6 +16,8 @@ import AboutUs from './Pages/AboutUs/AboutUs';
 import Blog from './Components/Blog/Blog';
 import Payment from './Pages/Payment/Payment';
 import RecipientDashboard from "./Pages/Dashboard/RecipientDashboard/ReceipientDashboard";
+// import IssuerDashboard from "./Pages/Dashboard/IssuerDashboard/IssuerDashboard";
+import IssuerDashboard from "./Components/IssuerDashboardComponents/layout/IssuerDashboard";
 // import ProtectedRoute from './auth/ProtectedRoute';
 // import Dashboard from './Pages/Dashboard/Dashboard';
 
@@ -42,6 +44,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/recipient" element={<RecipientDashboard />} />
+          <Route path="/issuer-dashboard" element={<IssuerDashboard />} />
 
           🔐 Wrap protected routes
           <Route path="/issue" element={

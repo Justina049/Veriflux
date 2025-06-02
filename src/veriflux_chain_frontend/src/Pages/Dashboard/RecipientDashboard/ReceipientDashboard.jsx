@@ -44,7 +44,6 @@ import './RecipientDashboard.scss';
 // Sidebar and Topbar
 import RecipientSidebar from '../../../Components/DashboardComponents/RecipientSidebar';
 import RecipientTopBar from '../../../Components/DashboardComponents/RecipientTopBar';
-// import SearchBar from '../../../Components/DashboardComponents/SearchBar';
 
 // Main Page Components
 import MyCertificates from '../../../Components/DashboardComponents/MyCertificates';
@@ -56,59 +55,48 @@ import CertificateHistory from '../../../Components/DashboardComponents/Certific
 const RecipientDashboard = () => {
   const [activePage, setActivePage] = useState('my-certificates');
 
-//   const renderPage = () => {
-//     switch (activePage) {
-//       case 'my-certificates':
-//         return <MyCertificates />;
-//       case 'help':
-//         return <Help />;
-//       case 'profile':
-//         return <Profile />;
-//       case 'notification':
-//         return <Notification />;
-//       case 'certificate-history':
-//         return <CertificateHistory />;
-//       default:
-//         return <MyCertificates />;
-//     }
-//   };
+  const handleSearch = (query) => {
+    console.log('Searching for:', query); // Later you can implement filtering logic here
+  };
 
-//   return (
-//     <div className="recipient-dashboard">
-//       <RecipientSidebar setActivePage={setActivePage} activePage={activePage} />
-//       <div className="main-content">
-//         <RecipientTopBar />
-//         {/* <SearchBar /> */}
-//         <div className="dashboard-body">
-//           {renderPage()}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+  const handleHelpClick = () => {
+    setActivePage('help');
+  };
 
-const menuItems = [
-    { id: 'my-certificates', label: 'My Certificates' },
-    { id: 'certificate-history', label: 'Certificate History' },
-    { id: 'notification', label: 'Notifications' },
-    { id: 'profile', label: 'Profile' },
-    { id: 'help', label: 'Help' },
-  ];
+  const handleNotificationClick = () => {
+    setActivePage('notification');
+  };
+
+  const renderPage = () => {
+    switch (activePage) {
+      case 'my-certificates':
+        return <MyCertificates />;
+      case 'help':
+        return <Help />;
+      case 'profile':
+        return <Profile />;
+      case 'notification':
+        return <Notification />;
+      case 'certificate-history':
+        return <CertificateHistory />;
+      default:
+        return <MyCertificates />;
+    }
+  };
 
   return (
-    <div className="recipient-sidebar">
-      <h2 className="sidebar-title">📘 VeriFlux</h2>
-      <ul className="sidebar-menu">
-        {menuItems.map((item) => (
-          <li
-            key={item.id}
-            className={`sidebar-item ${activePage === item.id ? 'active' : ''}`}
-            onClick={() => setActivePage(item.id)}
-          >
-            {item.label}
-          </li>
-        ))}
-      </ul>
+    <div className="recipient-dashboard">
+      <RecipientSidebar setActivePage={setActivePage} activeTab={activePage} />
+      <div className="main-content">
+        <RecipientTopBar 
+          onSearch={handleSearch}
+          onHelpClick={handleHelpClick}
+          onNotificationsClick={handleNotificationClick}
+        />
+        <div className="dashboard-body">
+          {renderPage()}
+        </div>
+      </div>
     </div>
   );
 };

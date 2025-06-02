@@ -25,6 +25,9 @@ const Navbar = () => {
           <NavLink to="/recipient" className={({ isActive }) => (isActive ? "active" : "")}>
             Dashboard
           </NavLink>
+          <NavLink to="/issuer-dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
+            Dashboard2
+          </NavLink>
         </li>
       </ul>
       <button className="go-to-app">Go to App</button>

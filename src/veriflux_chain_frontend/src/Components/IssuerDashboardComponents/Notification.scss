@@ -1,0 +1,77 @@
+@use '../../styles/variable' as *;
+
+.notification-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1.5rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $deep-blue;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    border: 1px solid $light-gray;
+    background-color: $white;
+    transition: background-color 0.3s ease;
+
+    &.read {
+      background-color: $light-gray;
+    }
+
+    .notif-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .message {
+        font-weight: 500;
+
+        &.info {
+          color: $royal-blue;
+        }
+
+        &.warning {
+          color: $gold;
+        }
+
+        &.success {
+          color: $emerald-green;
+        }
+
+        &.error {
+          color: $soft-red;
+        }
+      }
+
+      .timestamp {
+        font-size: 0.875rem;
+        color: $medium-gray;
+        margin-top: 0.25rem;
+      }
+
+      button {
+        font-size: 0.875rem;
+        color: $royal-blue;
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-decoration: underline;
+
+        &:hover {
+          color: $deep-blue;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+.bulk-issue-container {
+  padding: 1rem;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  .method-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: #ccc;
+      cursor: pointer;
+      border-radius: 4px;
+
+      &.active {
+        background: #00bcd4;
+        color: white;
+      }
+    }
+  }
+
+  .method-form {
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+}
+
+.input-table-form .table-row,
+.csv-upload-form form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1rem;
+
+  input {
+    flex: 1 1 200px;
+    padding: 0.5rem;
+  }
+
+  button {
+    padding: 0.5rem;
+  }
+}
+
+.alert {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 5px;
+
+  &.success {
+    background-color: #e0f8ec;
+    color: #027a48;
+  }
+
+  &.error {
+    background-color: #fdecea;
+    color: #b91c1c;
+  }
+}

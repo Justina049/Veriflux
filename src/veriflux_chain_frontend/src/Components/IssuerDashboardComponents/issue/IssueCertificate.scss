@@ -1,0 +1,44 @@
+.issue-certificate {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.issue-certificate h2 {
+  margin-bottom: 1.5rem;
+}
+
+.issue-certificate form {
+  display: flex;
+  flex-direction: column;
+}
+
+.issue-certificate label {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.issue-certificate input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 0.25rem;
+}
+
+.issue-certificate button {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #1c1f2e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.issue-certificate button:hover {
+  background-color: #333652;
+}

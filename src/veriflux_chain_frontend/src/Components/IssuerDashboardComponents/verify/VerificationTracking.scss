@@ -1,0 +1,42 @@
+.verification-tracking {
+  padding: 2rem;
+
+  h2 {
+    margin-bottom: 0.5rem;
+    color: $deep-blue;
+  }
+
+  p {
+    margin-bottom: 1.5rem;
+    color: $gray;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: $white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+    th,
+    td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid $light-gray;
+    }
+
+    th {
+      background-color: $light-blue;
+      color: $dark-blue;
+    }
+
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+
+    .failed {
+      color: red;
+      font-weight: bold;
+    }
+  }
+}

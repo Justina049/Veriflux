@@ -1,0 +1,77 @@
+@use '../../../styles/variable' as *;
+
+.recipient-management {
+  padding: 2rem;
+
+  h2 {
+    margin-bottom: 1.5rem;
+    color: $deep-blue;
+  }
+
+  .recipient-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    input {
+      padding: 0.6rem;
+      border: 1px solid $light-gray;
+      border-radius: 4px;
+      flex: 1;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: $royal-blue;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken($royal-blue, 8%);
+      }
+    }
+  }
+
+  .error {
+    color: $soft-red;
+    margin-bottom: 1rem;
+  }
+
+  .recipient-list {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+
+      th,
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid $light-gray;
+        text-align: left;
+      }
+
+      select {
+        padding: 0.4rem;
+        border-radius: 4px;
+        border: 1px solid $medium-gray;
+      }
+
+      button {
+        background-color: $soft-red;
+        color: white;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darken($soft-red, 10%);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+.issue-certificates {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    button {
+      flex: 1;
+      padding: 10px;
+      cursor: pointer;
+      background: #f1f1f1;
+      border: 1px solid #ccc;
+      font-weight: bold;
+
+      &.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+    }
+  }
+
+  .tab-content {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .alert {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+
+    &.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    &.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+  }
+
+  button[type='submit'] {
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+
+    &:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
+  }
+}

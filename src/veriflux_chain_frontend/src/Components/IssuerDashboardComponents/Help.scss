@@ -1,0 +1,38 @@
+@use '../../styles/variable' as *;
+
+.help-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: white;
+}
+
+.help-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.help-section {
+  margin-bottom: 2rem;
+}
+
+.section-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.section-list {
+  padding-left: 1.25rem;
+  list-style-type: disc;
+}
+
+.section-list li {
+  margin-bottom: 0.5rem;
+}
+
+.support-link {
+  color: #0070f3;
+  text-decoration: underline;
+}

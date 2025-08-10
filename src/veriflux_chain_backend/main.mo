@@ -1,48 +1,49 @@
-import Array "mo:base/Array";
-import Time "mo:base/Time";
+// import Array "mo:base/Array";
+// import Time "mo:base/Time";
 import Text "mo:base/Text";
 import Int "mo:base/Int";
 import Principal "mo:base/Principal";
 import CertifiedData "mo:base/CertifiedData";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
-// import Debug "mo:base/Debug";
 import Blob "mo:base/Blob";
-import Sha256 "mo:sha2/Sha256";
-import Nat8 "mo:base/Nat8";
+// import Sha256 "mo:sha2/Sha256";
+// import Nat8 "mo:base/Nat8";
 import Error "mo:base/Error";
 import CertTree "mo:ic-certification/CertTree";
 
 // Define the actor as an actor class to capture the initializer
-shared({ caller = owner }) actor class CertificateManager() {
-    let admin = owner;
+persistent actor CertificateManager {
+
+    transient var admin : Principal = Principal.fromActor(CertificateManager); // ✅ Works
 
     // ======== Certificate Types ========
-    type CertificateOld = {
+      type CertificateOld = {
         issuer: Text;
         recipient: Text;
         program: Text;
         issuedAt: Int;
         hash: Text;
     };
+  // other restoration logic...
 
     type Certificate = {
         issuer: Text;
         recipient: Text;
-        program: Text;
         email: Text; 
+        program: Text;
         issuedAt: Int;
         hash: Text;
         status: Text;
+        nft: ?Blob; // Added field for NFT representation
     };
-
     // --- User Types ---
     type Role = { #issuer; #verifier; #admin; #viewer };
     type Plan = { #free; #basic; #standard; #premium };
     type Status = { #pending; #approved; #rejected };
-
     type User = {
         principal: Principal;
+
         role: ?Role;
         plan: ?Plan;
         status: ?Status;
@@ -53,9 +54,9 @@ shared({ caller = owner }) actor class CertificateManager() {
     stable var certificatesEntries: [(Text, CertificateOld)] = [];
 
     // --- In-memory HashMaps ---
-    let users = HashMap.HashMap<Principal, User>(10, Principal.equal, Principal.hash);
-    var certificates = HashMap.HashMap<Text, Certificate>(10, Text.equal, Text.hash);
-
+    transient let users = HashMap.HashMap<Principal, User>(10, Principal.equal, Principal.hash);
+    transient var certificates = HashMap.HashMap<Text, Certificate>(10, Text.equal, Text.hash);
+    
     // --- Auto-register the owner as admin on canister init ---
     users.put(admin, {
         principal = admin;
@@ -88,12 +89,12 @@ shared({ caller = owner }) actor class CertificateManager() {
                 hash = oldCert.hash;
                 status = "Valid";
                 email = "";
+                nft = null; // Initialize NFT field
             };
             migratedCerts.put(key, newCert);
         };
         certificates := migratedCerts;
         certificatesEntries := [];
-        // Optionally, update the certification tree here as well
     };
 
     // --- Register a New User ---
@@ -118,16 +119,13 @@ shared({ caller = owner }) actor class CertificateManager() {
     };
 
     // --- Update Role (auto-set status) ---
-    // Only the user themselves or the admin can update the role
     public shared (msg) func updateUserRole(p: Principal, r: Role): async Text {
         switch (users.get(p)) {
             case null { return "User not found"; };
             case (?user) {
-                // Only allow the user or the admin to update
                 if (msg.caller != p and not isAdmin(msg.caller)) {
                     return "Unauthorized";
                 };
-                // Only the owner can be admin
                 if (r == #admin and p != admin) {
                     return "Only the owner can be admin";
                 };
@@ -137,10 +135,6 @@ shared({ caller = owner }) actor class CertificateManager() {
                     case (#admin) switch (user.status) { case null #pending; case (?s) s; };
                     case (#viewer) #approved;
                 };
-
-
-
-
 
                 users.put(p, {
                     principal = user.principal;
@@ -154,7 +148,6 @@ shared({ caller = owner }) actor class CertificateManager() {
     };
 
     // --- Update Plan ---
-    // Only the user themselves or the admin can update the plan
     public shared (msg) func updateUserPlan(p: Principal, plan: Plan): async Text {
         switch (users.get(p)) {
             case null { return "User not found"; };
@@ -174,7 +167,6 @@ shared({ caller = owner }) actor class CertificateManager() {
     };
 
     // --- Approve Issuer ---
-    // Only the admin can approve an issuer
     public shared (msg) func approveIssuer(p: Principal): async Text {
         switch (users.get(p)) {
             case null { return "User not found"; };
@@ -204,118 +196,41 @@ shared({ caller = owner }) actor class CertificateManager() {
 
     // ======== Certified Data ========
     stable let cert_store : CertTree.Store = CertTree.newStore();
-    let ct = CertTree.Ops(cert_store);
+    transient let ct = CertTree.Ops(cert_store);
 
-    // // Old Function (kept for backward compatibility)
-    // public shared(msg) func createCertificate(issuer: Text, recipient: Text, course: Text): async CertificateOld {
-    //     // Input Validation
-    //     if (Text.size(issuer) == 0 or Text.size(recipient) == 0 or Text.size(course) == 0) {
-    //         throw Error.reject("Error: All fields must be non-empty");
-    //     };
+    // New Function to upload a scanned copy of a certificate and mint it as an NFT
+    public shared (msg) func uploadCertificateNFT(hash: Text, scannedCopy: Blob): async Text {
+        let p = msg.caller;
 
-    //     let issuedAt = Time.now();
-    //     let hashInput = issuer # recipient # course # Int.toText(issuedAt);
-    //     let hashBlob = Text.encodeUtf8(hashInput);
-    //     let hash = Sha256.fromBlob(#sha256, hashBlob);
-    //     let hashHex = blobToHex(hash);
+        // Check if the user is an issuer or admin
+        switch (users.get(p)) {
+            case null { return "User not found"; };
+            case (?user) {
+                if (user.role != ?#issuer and not isAdmin(p)) {
+                    return "Unauthorized: Only issuers or admins can upload certificates";
+                };
+            };
+        };
 
-    //     let certOld: CertificateOld = {
-    //         issuer = issuer;
-    //         recipient = recipient;
-    //         program = course;
-    //         issuedAt = issuedAt;
-    //         hash = hashHex;
-    //     };
-
-    //     // Store as the new certificate format internally
-    //     let certNew: Certificate = {
-    //         issuer = issuer;
-    //         recipient = recipient;
-    //         program = course;
-    //         issuedAt = issuedAt;
-    //         hash = hashHex;
-    //         status = "Valid"; // New field added
-    //     };
-
-    //     certificates.put(hashHex, certNew);
-
-    //     // Add to certified tree for secure verification
-    //     let path : [Blob] = [Text.encodeUtf8("certificates"), Text.encodeUtf8(hashHex)];
-    //     let certBlob = to_candid(certNew);
-    //     ct.put(path, certBlob);
-    //     ct.setCertifiedData();
-
-    //     return certOld;  // Returning old type to prevent breaking frontend
-    // };
-
-
-        func normalize(text: Text): Text {
-        Text.toLowercase(Text.trim(text, #char ' '))
+        // Check if the certificate exists
+        switch (certificates.get(hash)) {
+            case null { return "Certificate not found"; };
+            case (?cert) {
+                // Update the certificate with the scanned copy as NFT
+                certificates.put(hash, {
+                    issuer = cert.issuer;
+                    recipient = cert.recipient;
+                    email = cert.email;
+                    program = cert.program;
+                    issuedAt = cert.issuedAt;
+                    hash = cert.hash;
+                    status = cert.status;
+                    nft = ?scannedCopy; // Store the scanned copy as NFT
+                });
+                return "NFT minted successfully";
+            };
+        };
     };
-
-    // Helper function to convert Blob to Hex String
-    private func blobToHex(blob: Blob): Text {
-        let hex = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
-        var result = "";
-        for (byte in Blob.toArray(blob).vals()) {
-            result #= hex[Nat8.toNat(byte) / 16] # hex[Nat8.toNat(byte) % 16];
-        };
-        result
-    };
-
-    // New Function (Future usage)
-    public shared(msg) func issueCertificate(issuer: Text, recipient: Text, email: Text, program: Text): async Certificate {
-        // Normalize inputs
-        let normIssuer = normalize(issuer);
-        let normRecipient = normalize(recipient);
-        let normEmail = normalize(email);
-        let normProgram = normalize(program);
-
-        // Input Validation
-        if (Text.size(normIssuer) == 0 or Text.size(normRecipient) == 0 or Text.size(normEmail) == 0 or Text.size(normProgram) == 0) {
-            throw Error.reject("Error: All text fields must be non-empty");
-        };
-
-        let dedupInput = normIssuer # normRecipient # normEmail # normProgram;
-        
-        let hashBlob = Text.encodeUtf8(dedupInput);
-        let hash = Sha256.fromBlob(#sha256, hashBlob);
-        let hashHex = blobToHex(hash);
-
-        if (certificates.get(hashHex) != null) {
-        throw Error.reject("Duplicate certificate: A certificate with these details already exists.");
-        };
-
-        let issuedAt = Time.now();
-
-        // let hashInput = issuer # recipient # program # Int.toText(issuedAt);
-        // let hashBlob = Text.encodeUtf8(hashInput);
-        // let hash = Sha256.fromBlob(#sha256, hashBlob);
-        // let hashHex = blobToHex(hash);
-
-        
-        let cert: Certificate = {
-            issuer = issuer;   
-            recipient = recipient;
-            email = email;
-            program = program;
-            issuedAt = issuedAt;
-            hash = hashHex;
-            status = "Valid";
-        };
-
-        certificates.put(hashHex, cert);
-
-        // Add to certified tree for secure verification
-        let path : [Blob] = [Text.encodeUtf8("certificates"), Text.encodeUtf8(hashHex)];
-        let certBlob = to_candid(cert);
-        ct.put(path, certBlob);
-        ct.setCertifiedData();
-
-        return cert;
-    };
-
-    
 
     // Verify a certificate by hash
     public query func verifyCertificate(hash: Text) : async {
